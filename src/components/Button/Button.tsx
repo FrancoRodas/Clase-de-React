@@ -1,15 +1,10 @@
 import "./button.css"
 
-interface Props {
-  label: string,
-  parentMethod: () => void,
-}
+type Props = {
+  label: string;
+  parentMethod: () => void;
+};
 
-export const button = ({label, parentMethod}:Props) => {
-  
-  return (
-    <button className="custom-button" onClick={parentMethod}>
-      {label}
-     </button>
-  )
+export default function Button({ label, parentMethod }: Props) {
+  return <button onClick={parentMethod}>{label}</button>;
 }
