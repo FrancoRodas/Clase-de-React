@@ -1,0 +1,7 @@
+en assets se encuentra el index html,
+una metadata es info extra que añadimos extra para que los anvegadores lo usen para renderizar o SEO
+Al crear una build con bun se forma un bandler, este va a ser un script importado dentro de la carpeta de assets en el archivo inddex.js, un bundel ciosta de 3 procesos,
+primero minimiza el codigo, luego lo uglifea (uglifying) para que terceros no puedan manipular la pagina, y el ultimo proceso es el treeshaking (sacudir el arbol) que sirve para eliminar archivos que no tienen uso en la carpeta
+Los bundlers tambien sirven para proporcionar seguridad a la pagina, ya que divide el codigo en 2 partes, una PUBLICA y otra PRIVADA. La unica parte que se va a quedar
+cargada en la memoria del navegador va a ser la PUBLICA, haciendo que cualquier tercero sin acceso a la pagina pueda ver ese contenido "limitado", y segun la regla de la encriptacion
+al estar solo cargada la parte PUBLICA, NINGUN TERCERO CON INTENCIONES MALICIOSAS PUEDE INGRESAR A LOS ARCHIVOS PRIVADOS YA QUE ESTOS NO SE QUEDAN GUARDADOS EN MEMORIA.
