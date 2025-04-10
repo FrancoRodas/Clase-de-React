@@ -1,7 +1,79 @@
-en assets se encuentra el index html,
+CREANDO NUESTRO PROYECTO EN REACT
 una metadata es info extra que añadimos extra para que los anvegadores lo usen para renderizar o SEO
 Al crear una build con bun se forma un bandler, este va a ser un script importado dentro de la carpeta de assets en el archivo inddex.js, un bundel ciosta de 3 procesos,
 primero minimiza el codigo, luego lo uglifea (uglifying) para que terceros no puedan manipular la pagina, y el ultimo proceso es el treeshaking (sacudir el arbol) que sirve para eliminar archivos que no tienen uso en la carpeta
 Los bundlers tambien sirven para proporcionar seguridad a la pagina, ya que divide el codigo en 2 partes, una PUBLICA y otra PRIVADA. La unica parte que se va a quedar
 cargada en la memoria del navegador va a ser la PUBLICA, haciendo que cualquier tercero sin acceso a la pagina pueda ver ese contenido "limitado", y segun la regla de la encriptacion
 al estar solo cargada la parte PUBLICA, NINGUN TERCERO CON INTENCIONES MALICIOSAS PUEDE INGRESAR A LOS ARCHIVOS PRIVADOS YA QUE ESTOS NO SE QUEDAN GUARDADOS EN MEMORIA.
+
+Vite es un bundler, asi que cumple el mismo proposito que los demas blunders para la seguridad del codigo
+El propio META dijo que NO SE DEBE USAR MAS ""CREATE REACT APP"" A LA HORA DE HACER UNA APP ya que esta obsoleto, ya que al usar este codigo utiliza webpacks
+(manejador de paquetes de la web) haciendo que sea lento y tedioso. Por eso hoy en dia se utiliuza Vite.Js que utiliza Rollup (el nombre del blunder)
+Vite utiliza los bundlers de Rollup y le agrega un sistema de plugins, permitiendo que se puedan agregar cosas más rapido, ejemplo:
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+Con este codigo esta dando soporte para React (Vite latest), si queremeos agregarle testing,PWA(Progresive Web Aplication), variables de entorno, etc, se tienen que añadir los plugins los plugins
+
+------------------------------------------------------------------------------------------------------------
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+
+Sistema de carpetas
+Que es un "Strict Mode"?, Controla la amanera en la que funciona los componentes, creando un componente, luego lo renderiza y va a ver si el estado del componente duplicado
+es el mismo que antes de renderizarse, es una forma para controlar el funcionamiento de un componente y luego de producción se quita.
+
+Que es "createRoot"?; Es un metodo que viene de "react-dom/client", va a crear el lugar donde van a estar las bases de nuestra aplicacion, ademas va a renderizar algo por default
+o mejor dicho un boostrap, ademas al lado del root hay un signo de exclamacion para que de el documentoID aunque este no existe.
+
+Dentro de App se encuentra toda nuestra aplicacion, es una funcion que se exporta
+¿Como funcionan los imports? si cambiamos el nombre de ambos App (pepito) por más que no coincida con el nombre del archivo va a funcionar igual, porque lo que dice el EXPORT
+es distinto a lo del IMPORT, el export dice "export default App;".
+Esto quiere decir que el archivo va a estar exportando lo que viene por defecto dentro de su archivo, asi que por más que se le cambie el nombre a lo que se va a 
+importar, en este caso va a seguir funcionando debido a como esta declarado el export. ESTO SE HACE SIEMPRE QUE DE TODO EL CONTENIDO DE UN ARCHIVO SOLO UNA PARTE 
+SEA IMPORTANTE.
+Ah no ser de que tengas llaves, con las {} se especificaba que es lo que se quiere importar, si hacemos "import React from "react"" y luego lo queremos exportar 
+a la aplicacion usamos REACT.StrictMode lo que estamos haciendo es exportar todo el react para usar una sola cosa, haciendo que se sobrecarguen los archivos.
+
+Este tipo de estructura se lo conoce como una Single Page Aplication (SPA)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+DETECCION DE CAMBIOS EN REACT
+En React poemos encontrar algo llamado deteccion de cambios, cuando trabajamos en una SPA, una aplicacion que va a tener un index.html y en este identificamos un div que contiene un root
+esto va a cambiar dinamicamente, hay una forma en la que react detecta los cambios, cosa que hacenb todas las librerias, freameworks. El tema es ver como cada uno lodetecta segun sus metodos
+
+Que es un Trigger? Es un evento, cualquiera, qeu va a iniciar un procecso de render. Esto puede ser un boton, el estado de un componente, una llamada de una api,
+Hay 2 tipos de Triggers, el primero es el inicial, es importante porque inicia todo el proceso para llegar a render. Primero se inicia un componente, se carga o se monta
+y va a hacer que este se renderice. El segundo es el que hace que tenga Re-render, esto es peligroso ya que renderiza 2 veces luego de un cambio.
+
+Proceso de render en React
+React trqabaja con 2 DOM(Document Object Model), el DOM normal y el DOM Virtual. El normal escribe y renderiza el contenido del Html, al detectar un cambio, lo compara
+dentro del DOM virtual, es una copia del DOM pero con los cambios hechos, una vez comparados, aplica los cambios y se ejecuta el Render.
+¿Como se escribe un componente en React? Se escribe como una funcion
+function Dashboard (){
+    return (afnaifhnai);
+}
+¿Que es el Render? El render ejecuta funciones, los componmentes en React son renders ejecutando funciones
+<Dashboard/> al llamarlo asi en el Html ejecuta la funcion del Dashboard
+
+Un commit dentro de React es aplicar el cambio del DOM virtual al DOM real.
+
+Trigger - Renderizado de contenido (componente) - Commit(Aplica el cambio)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+COMPONENTES
