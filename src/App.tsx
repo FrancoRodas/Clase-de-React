@@ -1,19 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
-import { Button } from './components';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [data, setData] = useState([])
 
-  const countMore = () => {
-    setCount((count) => count + 1);
-  };
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://api.example.com/data")}
+      const jsonData = await response.json()
+      setData(jsonData)
+  } catch (err) {
+    console.error(err)
+  }
 
-  return (
-    <>
-      <Button label={`Count is ${count}`} parentMethod={countMore} />
-    </>
-  );
+  useEffect(()=>{
+    fetchData()
+  },[])
 }
 
 export default App;

@@ -1,3 +1,75 @@
+Cursito de react.
+#Cuando usar React vs Framework
+- JavaScript -> React -> libreria
+- Numero 1 en el mercado laboral
+- Angular -> Vue
+
+React proviene de META como una solucion para la programacion con Clien Side Rendering
+(Renderizado del Lado del Cliente) o Aplicacion de pagina Unica (SPA)
+
+Libreria para generar aplicaciones basados en componentes
+
+Angular JS -> MVC
+View ->Muestra lo que hay en la pantalla
+Model -> el lugar donde se guardan los valores de las variables
+Controller -> Se encarga de modificar los valores / contienen la logica de negocio
+
+React -> NO hace mas MVC, hace una combinacion entre MVVM / MVC
+Angular JS =>
+    - HTML
+    - CSS
+    - Controller
+
+Componente =>
+    - HTML -> Va a tener la capacidad de modificar el modelo
+    - CSS
+    - Typescript / JavaScript
+
+Controller -> Typescript -> Modelo -> Vista -> Modelo
+
+Angular JS -> se queda atrás 
+    - Verbose (muy complejo)
+    - hay mucha cantidad de codigo
+    - dificil de aprender
+
+React -> Se vuelve popular
+    - Es mas rapido
+    - Facil de aprender
+    - Simple
+    - Comodo
+
+Sigue siendo una libreria, solamente tiene codigo de terceros que aumenta la funcionalidad de algo
+No tiene enrutamiento propio, casi nada. Por eso hay que agregarle un conjunto de librerias a utilizar
+
+Cuando es conveniente usar React?
+Siempre que necesitemos:
+    - App a medida
+    - Simplicidad
+    - Minimiza el peso ya que solo se implementa lo que se necesita
+    - Prototipos
+    - Single Page Applications (SPA) -> CSR (Client Side Rendering) -> TODO EN EL CLIENTE -> Apps PRIVADAS 
+
+Hay frameworks de react 
+- Solid Js -> Es como deberia haber sido React desde un principio
+   - No hay trabajo de Solid Js
+   - Reactivivdad Real (Signals) 
+- NextJS -> Genial para gente que ya sabe - aplicaciones privadas y publicas
+   - Necesito SEO ?
+   - Necesito todo lo que me brinda??
+   - Tiene su forma de pensar diferente - CSR (El browser renderiza todo) - SSR (El servidor Renderiza todo) / SSG (Server Side Generation)
+   - Hace todo en SSR.
+- Remix -> Esta pensado para el SSR
+   - SEO crucial
+   - Performance
+   - Data fetching avanzado
+   - Routing
+   - Comodidad
+   - No hay trabajo
+
+React 19
+   - useCallback
+   - useMemo
+
 CREANDO NUESTRO PROYECTO EN REACT
 una metadata es info extra que añadimos extra para que los anvegadores lo usen para renderizar o SEO
 Al crear una build con bun se forma un bandler, este va a ser un script importado dentro de la carpeta de assets en el archivo inddex.js, un bundel ciosta de 3 procesos,
@@ -89,8 +161,53 @@ Para que todos los procesos de deteccion de cambios en react funcionen deben exi
   Un componente siempre tiene que ser la minima unidad de logica posible, es una propiedad o funcion que nosotros creamos para luego importar su estilo o 
   funcion a la app.tsx. Siempre se tiene que Atomizar los componentes ya que al minimizarlo lo maximo posible va a ser mas facil manipularlo y editarlo sin hacer
   grandes cambios, reutilizar, etc. Un componente Siempre tiene que tener la minima unidad logica posible y solo tiene que contener la logica que le pertenece
+  Un componente es una funcion que se va a ejecutar y su resultado se va a implementar al HTML
 
-  --------------------------------------------------------------------------------------------------------------------------------------------------
+las llaves muestran las propiedades que tiene el componente, y los : luego de estos muestra de donde viene, a esto se lo conoce como destructuring y es una buena practica
+de JavaScript
+export const Button = ({label,parenthMethod}:Props)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
 
   UseState
-  
+
+Si queremos bindear una conexion entre render y contenido estamos hablando de un estado, para que un estado cambie primero se tiene que montar el componente
+luego se cambia el estado y luego por un metodo asincrono se cambia tambien de estado.
+UseState es un hook (gancho) de react, useState usa el estado para relacionar una variable para poder utilizarla en el render, esta tambien posee un metodo para modificar 
+dicha variable y que esto triggeree un cambio de estado. Usa los estados a traves de un getter para que pueda renderizarlo.
+Hay una regal dentro de React que se llama "Batching", si ejecutas varios cambios de estado al mismo timepo, este los va a agrupar y los va a ejecutar a todos al final
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+UseEffect
+
+En esta clase vamos a ahcer una clasica peticion al backend, un clasico flujo para obtener informacion, mostrarlo en pantalla y controlar errores desde react. Cuando obtenemos una data 
+tenemos que comunicarnos con un endpóint, este mismo es una entidad externa al componente (servidor, ejemplo). UseEffect es un hook, siempre que tenga un use es un hook (state y effect son 
+propios de react) y luego estan los custom hooks, se usan para enganchar un estado de un componente. UseEffect nos va a ayudar a controlar los ciclos de vida de un componente, porque todo lo que ponga dentro
+del metodo que tenemos lo va a hacer de x manera  (ejemplo: useEffect(()=>{},[])), o eso es lo que piensa todo el mundo, y tambien va a aceptar un arreglo de dependencias. 
+Esta logica se ejecuta cuando hay varios momentos especificos: cuando se monta el componente, cuando se modifique uno de los valores del state dentro del arreglo de dependencias, y cuando se destruen los componentes.
+Si no ponemos el arreglo de dependencias esto va a generar que se ejecute cada vez que cambie cualquier valor del estado. Dentro de este metodo se puede hacer un return para manejar la memoria de manera manual.
+Esto se utiliza para manejar el estado de la memoria.
+EL USO CORRECTO DE UseEffect SIRVE PARA SINCRONIZAR CON ENTIDADES EXTERNAS, se usa cuando tenemos que pegarlo con un endpoint, operaciones asincronas, parametros de entrada, siempre cuando algo viene desde afuera
+de la aplicacion, como tambien un context, etc. Se puede usar mas de un UseEffect.
+
+function App() {
+  const [data, setData] = useState([])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://api.example.com/data")}
+      const jsonData = await response.json()
+      setData(jsonData)
+  } catch (err) {
+    console.error(err)
+  }
+
+  useEffect(()=>{
+    fetchData()
+  },[data])
+}
+
+Primero se setean los estados, luego se crean los metodos, cada uno separado por un enter y luego se puede ver lo que pasa dentro de useEffect, en las ultimas 3 lineas de codigo del ejemplo
+podemos ver que tenemos un useEffect que ejecuta un metodo,y cada vez que data cambie se hace un fetchData, pero esto esta mal ya que puede generar un bucle infinito
+En este caso el data al final no se pone para evitar este bucle infinito.

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./button.css"
 
 type Props = {
@@ -6,5 +7,9 @@ type Props = {
 };
 
 export default function Button({ label, parentMethod }: Props) {
+
+  useEffect(()=>{
+    console.log('label cambiado')
+  }, [label])
   return <button onClick={parentMethod}>{label}</button>;
 }
