@@ -89,3 +89,8 @@ Para que todos los procesos de deteccion de cambios en react funcionen deben exi
   Un componente siempre tiene que ser la minima unidad de logica posible, es una propiedad o funcion que nosotros creamos para luego importar su estilo o 
   funcion a la app.tsx. Siempre se tiene que Atomizar los componentes ya que al minimizarlo lo maximo posible va a ser mas facil manipularlo y editarlo sin hacer
   grandes cambios, reutilizar, etc. Un componente Siempre tiene que tener la minima unidad logica posible y solo tiene que contener la logica que le pertenece
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------
+
+  UseState
+  
