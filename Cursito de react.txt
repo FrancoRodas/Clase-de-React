@@ -177,6 +177,46 @@ UseState es un hook (gancho) de react, useState usa el estado para relacionar un
 dicha variable y que esto triggeree un cambio de estado. Usa los estados a traves de un getter para que pueda renderizarlo.
 Hay una regal dentro de React que se llama "Batching", si ejecutas varios cambios de estado al mismo timepo, este los va a agrupar y los va a ejecutar a todos al final
 
+⚡ useState → Para manejar el estado de los componentes
+🧠 ¿Qué es?
+useState es un hook que te permite declarar y usar estado dentro de un componente funcional.
+Antes, esto solo se podía hacer con componentes de clase, pero con hooks ahora se puede en funciones.
+
+📦 ¿Para qué sirve?
+Para guardar y actualizar valores que cambian con el tiempo, como:
+
+El valor de un input
+
+Un contador
+
+Datos traídos de una API
+
+Estado de carga, etc.
+
+✅ Ejemplo básico
+
+import { useState } from 'react';
+
+function Contador() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Contador: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Sumar</button>
+    </div>
+  );
+}
+
+🔍 ¿Qué está pasando acá?
+useState(0) → Inicializa el estado con 0.
+
+count → Es la variable de estado actual.
+
+setCount → Es la función para actualizar ese estado.
+
+Cada vez que llamás a setCount, React renderiza de nuevo el componente con el nuevo valor.
+
 --------------------------------------------------------------------------------------------------------------------------------------------------
 
 UseEffect
@@ -211,3 +251,88 @@ function App() {
 Primero se setean los estados, luego se crean los metodos, cada uno separado por un enter y luego se puede ver lo que pasa dentro de useEffect, en las ultimas 3 lineas de codigo del ejemplo
 podemos ver que tenemos un useEffect que ejecuta un metodo,y cada vez que data cambie se hace un fetchData, pero esto esta mal ya que puede generar un bucle infinito
 En este caso el data al final no se pone para evitar este bucle infinito.
+
+
+⚡ useEffect → Para manejar efectos secundarios
+🧠 ¿Qué es?
+useEffect es otro hook que se ejecuta después de que el componente se monta (y también después de cada render, dependiendo de cómo lo configures).
+
+📦 ¿Para qué sirve?
+Para todo lo que es lógica que no tiene que ver directamente con el renderizado, como:
+
+Llamadas a APIs
+
+Subscribirse a eventos
+
+Manipular el DOM
+
+Timers (setInterval, setTimeout)
+
+Escuchar cambios en variables
+
+✅ Ejemplo básico: llamada a una API
+
+import { useEffect, useState } from 'react';
+
+function Usuarios() {
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(res => res.json())
+      .then(data => setUsuarios(data));
+  }, []); // <- importante!
+
+  return (
+    <ul>
+      {usuarios.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+🔍 ¿Qué está pasando?
+El useEffect se ejecuta una sola vez al montar el componente (por el array vacío []).
+
+Hace una llamada a una API y guarda los datos en el estado.
+
+Cuando el estado usuarios cambia, el componente se vuelve a renderizar.
+
+🧪 Formato general de useEffect
+
+useEffect(() => {
+  // Código que querés ejecutar
+  return () => {
+    // Cleanup opcional (por ejemplo: remover listeners o timers)
+  }
+}, [dependencias]);
+📍 Dependencias:
+[] → Se ejecuta una vez al montar el componente.
+
+[estado1, estado2] → Se ejecuta cuando cambian esos valores.
+
+Sin array → Se ejecuta en cada render (no se recomienda mucho).
+
+🧠 Diferencias clave entre los dos:
+
+                useState	                                useEffect
+
+¿Cuándo se usa?	Para guardar datos dentro del componente	Para ejecutar lógica después del render
+
+¿Qué hace?	    Guarda y actualiza estado	                Ejecuta efectos secundarios
+
+¿Dispara render?	Sí, al cambiar el estado	              No por sí solo (pero puede causar uno si actualiza estado)
+
+🔥 Combo real
+
+Los dos se suelen usar juntos:
+
+const [data, setData] = useState([]);
+
+useEffect(() => {
+  fetchData().then(setData);
+}, []);
+¿Querés una analogía?
+useState es como una mochila donde guardás lo que necesitás y podés ir cambiando.
+
+useEffect es como decir: “cuando pase tal cosa, hacé esto” (como un efecto colateral).
