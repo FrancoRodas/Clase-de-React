@@ -188,7 +188,7 @@ del metodo que tenemos lo va a hacer de x manera  (ejemplo: useEffect(()=>{},[])
 Esta logica se ejecuta cuando hay varios momentos especificos: cuando se monta el componente, cuando se modifique uno de los valores del state dentro del arreglo de dependencias, y cuando se destruen los componentes.
 Si no ponemos el arreglo de dependencias esto va a generar que se ejecute cada vez que cambie cualquier valor del estado. Dentro de este metodo se puede hacer un return para manejar la memoria de manera manual.
 Esto se utiliza para manejar el estado de la memoria.
-EL USO CORRECTO DE UseEffect SIRVE PARA SINCRONIZAR CON ENTIDADES EXTERNAS, se usa cuando tenemos que pegarlo con un endpoint, operaciones asincronas, parametros de entrada, siempre cuando algo viene desde afuera
+EL USO CORRECTO DE UseEffect SIRVE PARA SINCRONIZAR CON ENTIDADES EXTERNAS (EXTERNOS AL ARCHIVO QUE ESATMOS TARBAJANDO), se usa cuando tenemos que pegarlo con un endpoint, operaciones asincronas, parametros de entrada, siempre cuando algo viene desde afuera
 de la aplicacion, como tambien un context, etc. Se puede usar mas de un UseEffect.
 
 function App() {
@@ -211,3 +211,73 @@ function App() {
 Primero se setean los estados, luego se crean los metodos, cada uno separado por un enter y luego se puede ver lo que pasa dentro de useEffect, en las ultimas 3 lineas de codigo del ejemplo
 podemos ver que tenemos un useEffect que ejecuta un metodo,y cada vez que data cambie se hace un fetchData, pero esto esta mal ya que puede generar un bucle infinito
 En este caso el data al final no se pone para evitar este bucle infinito.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Custom hooks
+
+Los hooks siemopre tienen un use al inicio, se pueden crear custom hooks en una carpeta a parte dentro de src
+Se declaran los tipos dentro del custom y no se exportan/importan porque solamente se usan en este mismo
+
+Esta logica de app.tsx pertenece al componente ya que es lo que este mismo debe realizar
+
+import './App.css';
+import { useFetch } from './hooks';
+
+const url = "https://api.example.com/data";
+
+function App() {
+  const {data, error, loading} = useFetch(url)
+
+  if (loading){
+    return <div>Cargando...</div>
+  }
+
+  if (error) {
+    return <div>Ups, ah ocurrido un error: {error.message}</div>
+  }
+
+  return(<div>{JSON.stringify(data)}</div>)
+}
+
+export default App;
+
+Mientras que este codigo que pertenece al custom hook es logica que pertenece al fetch, no al componente, ya que el componente solo va a devolver resultados, el que realiza la logica es el 
+custom hook
+
+import { useEffect, useState } from "react";
+
+type Data<T> = T | null;
+type ErrorType = Error | null;
+
+interface Params<T> {
+    data : Data;
+    loading : boolean;
+    error: ErrorType;
+}
+
+export const useFetch = <T>(url: string): Params<T> => {
+    const [data, setData] = useState<Data<T>>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<ErrorType>(null)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("Error en la peticion")
+                }
+
+                const jsonData: T = await response.json();
+                setData(jsonData)
+            }catch (err){
+                setError(err as Error)
+            }finally{
+                setLoading(false)
+            }
+        }
+        fetchData();
+    }, [url])
+    return {data, loading, error}
+}

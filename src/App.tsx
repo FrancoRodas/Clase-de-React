@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
 import './App.css';
+import { useFetch } from './hooks';
+
+const url = "https://api.example.com/data";
+
+interface Data {
+  name: string;
+  lastName: string;
+  age: number;
+}
 
 function App() {
-  const [data, setData] = useState([])
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch("https://api.example.com/data")}
-      const jsonData = await response.json()
-      setData(jsonData)
-  } catch (err) {
-    console.error(err)
+  const {data, error, loading} = useFetch<Data >(url)
+  if (loading){
+    return <div>Cargando...</div>
   }
 
-  useEffect(()=>{
-    fetchData()
-  },[])
+  if (error) {
+    return <div>Ups, ah ocurrido un error: {error.message}</div>
+  }
+
+  return(<div>{JSON.stringify(data)}</div>)
 }
 
 export default App;
